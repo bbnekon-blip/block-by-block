@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>5IVE: Rise to the Mic</title>
+<style>
+:root{--ink:#f5f1ff;--muted:#bbb2d0;--panel:#191629;--purple:#9b6bff;--pink:#ff5ca8;--gold:#ffd16e;--bg:#0c0b13}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);background:var(--bg);font:16px/1.5 system-ui,sans-serif}
+button{font:inherit;cursor:pointer;color:inherit}
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+.home{position:relative;overflow:hidden;min-height:100vh;display:grid;place-items:center;padding:28px;background:linear-gradient(90deg,#100c1bea,#100c1b9c 52%,#100c1b14),radial-gradient(ellipse at 75% 35%,#ffb64a 0 3%,transparent 4%),linear-gradient(160deg,transparent 35%,#17122b 36% 57%,#10101a 58%),linear-gradient(180deg,#5b3485,#241c44 50%,#11111a)}
+.city{position:absolute;inset:auto 0 0;height:48%;background:linear-gradient(90deg,transparent 0 4%,#10101c 4% 13%,transparent 13% 16%,#141321 16% 26%,transparent 26% 30%,#10101c 30% 42%,transparent 42% 46%,#151323 46% 57%,transparent 57% 61%,#11101c 61% 76%,transparent 76% 79%,#151323 79% 92%,transparent 92%),linear-gradient(180deg,#171323,#0a0a11);clip-path:polygon(0 28%,7% 28%,7% 3%,17% 3%,17% 30%,25% 30%,25% 0,37% 0,37% 37%,46% 37%,46% 11%,57% 11%,57% 27%,68% 27%,68% 4%,80% 4%,80% 35%,89% 35%,89% 12%,100% 12%,100% 100%,0 100%);opacity:.93}
+.hero{position:relative;z-index:1;width:min(100%,980px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:28px}
+.brand{color:var(--gold);letter-spacing:.32em;font-size:.8rem;font-weight:900}
+h1{margin:.06em 0;font-size:clamp(4rem,13vw,8.8rem);line-height:.82;letter-spacing:-.09em;text-shadow:5px 6px 0 #401c5f}
+.subtitle{color:#e8dcff;font-weight:700;letter-spacing:.15em}
+.pitch{max-width:510px;color:#ded6eb;margin:22px 0}
+.portrait{min-height:340px;position:relative;display:grid;place-items:end center;overflow:hidden}
+.spotlight{position:absolute;width:76%;height:95%;bottom:-4%;border-radius:50% 50% 0 0;background:linear-gradient(180deg,#ffbf6330,#9b6bff12)}
+.person{position:relative;width:220px;height:310px;background:linear-gradient(90deg,#191525,#423061 48%,#171422);border-radius:105px 105px 18px 18px;box-shadow:0 0 60px #ff83bc30}
+.person:before{content:"";position:absolute;width:112px;height:126px;top:25px;left:54px;border-radius:50%;background:linear-gradient(140deg,#a9684b,#613b39);box-shadow:inset 0 22px 0 #221822}
+.person:after{content:"";position:absolute;width:150px;height:18px;top:175px;left:34px;background:#c8b9dc;border-radius:20px;transform:rotate(-12deg);box-shadow:0 0 18px #c8b9dc}
+.mic{position:absolute;width:17px;height:155px;bottom:24px;left:62%;border-radius:12px;background:linear-gradient(90deg,#aaa,#fff,#777);transform:rotate(17deg);box-shadow:0 0 20px #fff7}
+.mic:before{content:"";position:absolute;width:35px;height:48px;top:-27px;left:-9px;border-radius:50%;background:repeating-linear-gradient(0deg,#aaa 0 3px,#eee 4px 6px)}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.btn{border:0;border-radius:12px;padding:13px 19px;font-weight:850;background:linear-gradient(100deg,var(--pink),var(--purple));box-shadow:0 8px 24px #8c52ef40}
+.btn.secondary{color:#eee;background:#ffffff13;border:1px solid #ffffff24;box-shadow:none}
+.game{max-width:1050px;margin:auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ffffff18;padding-bottom:14px;margin-bottom:20px}
+.game-title{font-weight:950;letter-spacing:.12em;color:var(--gold)}
+.stats{display:flex;flex-wrap:wrap;gap:8px}
+.pill{background:#ffffff10;border:1px solid #ffffff12;padding:6px 10px;border-radius:99px;color:#e8ddff;font-size:.9rem}
+.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(230px,.65fr);gap:18px}
+.card{background:var(--panel);border:1px solid #ffffff13;border-radius:18px;padding:20px}
+.scene-art{height:210px;border-radius:14px;margin-bottom:18px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 80%,#ff9f3e 0 3%,transparent 4%),linear-gradient(0deg,#16111e 0 25%,transparent 26%),linear-gradient(180deg,#3b2a62,#201b38 65%,#15121e)}
+.scene-art:before{content:"";position:absolute;inset:35% 0 0;background:repeating-linear-gradient(90deg,transparent 0 35px,#100f1c 36px 72px);clip-path:polygon(0 20%,10% 20%,10% 0,20% 0,20% 24%,32% 24%,32% 5%,44% 5%,44% 28%,57% 28%,57% 0,71% 0,71% 18%,83% 18%,83% 3%,100% 3%,100% 100%,0 100%)}
+.scene-art:after{content:"";position:absolute;width:7px;height:90px;left:50%;bottom:0;background:#e9d9ff;box-shadow:0 0 30px #e5b9ff;transform:rotate(20deg)}
+h2{margin:0 0 8px;font-size:1.45rem}
+.muted{color:var(--muted)}
+.choices{display:grid;gap:10px;margin-top:16px}
+.choice{padding:13px 15px;border:1px solid #ffffff1c;border-radius:12px;text-align:left;background:#ffffff09}
+.choice:hover{background:#754edb55;border-color:#b99aff}
+.side h3{margin:0 0 12px}
+.upgrade{padding:12px 0;border-top:1px solid #ffffff13}
+.upgrade button{margin-top:8px}
+.small{font-size:.88rem;color:var(--muted)}
+.rhythm{margin-top:18px;padding:16px;background:#100f19;border-radius:14px}
+.track{height:20px;margin:12px 0;border-radius:99px;position:relative;background:linear-gradient(90deg,#ff5c7a,#ffd16e 42% 58%,#ff5c7a)}
+.marker{position:absolute;top:-7px;left:0;width:6px;height:34px;border-radius:5px;background:white;box-shadow:0 0 14px white}
+.cutscene{position:fixed;inset:0;z-index:3;display:none;place-items:center;padding:20px;background:#08070edb}
+.cutscene.show{display:grid}
+.dialog{width:min(100%,620px);padding:25px;border-radius:18px;background:#201b31;border:1px solid #ffffff2a;box-shadow:0 20px 80px #000a}
+.dialog .speaker{color:var(--gold);font-size:.8rem;letter-spacing:.2em;font-weight:900}
+.dialog p{font-size:1.13rem}
+@media(max-width:720px){.hero{grid-template-columns:1fr;text-align:center;gap:0}.hero .actions{justify-content:center}.portrait{min-height:190px;order:-1}.person{transform:scale(.62);transform-origin:bottom center;margin-bottom:-115px}.layout{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+
+<section id="home" class="screen active home">
+  <div class="city"></div>
+  <div class="hero">
+    <div>
+      <div class="brand">AN ORIGINAL MUSIC STORY GAME</div>
+      <h1>5IVE</h1>
+      <div class="subtitle">RISE TO THE MIC</div>
+      <p class="pitch">One open mic. One borrowed beat. A whole city waiting to hear what you’ve got. Write your story, find your sound, and build a name one performance at a time.</p>
+      <div class="actions">
+        <button class="btn" id="startBtn">START YOUR STORY</button>
+        <button class="btn secondary" id="continueBtn">CONTINUE</button>
+      </div>
+      <p class="small">Original characters and fictional setting. Progress saves in this browser.</p>
+    </div>
+    <div class="portrait" aria-label="Illustrated performer">
+      <div class="spotlight"></div><div class="person"></div><div class="mic"></div>
+    </div>
+  </div>
+</section>
+
+<section id="game" class="screen">
+  <div class="game">
+    <header>
+      <div class="game-title">5IVE: RISE TO THE MIC</div>
+      <div class="stats">
+        <span class="pill">⭐ Fans: <b id="fans">0</b></span>
+        <span class="pill">💵 Cash: <b id="cash">0</b></span>
+        <span class="pill">🎤 Skill: <b id="skill">1</b></span>
+      </div>
+    </header>
+    <div class="layout">
+      <main class="card">
+        <div class="scene-art"></div>
+        <div class="small" id="chapter"></div>
+        <h2 id="sceneTitle"></h2>
+        <p class="muted" id="sceneText"></p>
+        <div id="choices" class="choices"></div>
+        <div id="rhythm" class="rhythm" hidden>
+          <b>RHYTHM CHALLENGE</b>
+          <p class="small">Press the button when the marker is near the middle. Spacebar works too.</p>
+          <div class="track"><div class="marker" id="marker"></div></div>
+          <button class="btn" id="hitBtn">HIT THE BEAT</button>
+          <p class="small" id="rhythmMessage"></p>
+        </div>
+      </main>
+      <aside class="card side">
+        <h3>🎛️ Your Setup</h3>
+        <p class="small">Upgrade your gear to improve performances.</p>
+        <div class="upgrade">
+          <b>Practice Room · Level <span id="roomLevel">0</span></b>
+          <div class="small">Improves rhythm timing.</div>
+          <button class="btn secondary" id="roomBtn">Upgrade · $20</button>
+        </div>
+        <div class="upgrade">
+          <b>Stage Presence · Level <span id="stageLevel">0</span></b>
+          <div class="small">Earn more fans from performances.</div>
+          <button class="btn secondary" id="stageBtn">Upgrade · $30</button>
+        </div>
+        <div class="upgrade">
+          <b>Notebook · Level <span id="bookLevel">0</span></b>
+          <div class="small">A boost to your creative skill.</div>
+          <button class="btn secondary" id="bookBtn">Upgrade · $25</button>
+        </div>
+        <hr style="border-color:#ffffff18;margin:18px 0">
+        <button class="btn secondary" id="homeBtn">Save &amp; Home</button>
+        <button class="btn secondary" id="resetBtn">New Game</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<div id="cutscene" class="cutscene" role="dialog" aria-modal="true">
+  <div class="dialog">
+    <div class="speaker" id="speaker">SCENE</div>
+    <p id="dialogText"></p>
+    <button class="btn" id="nextDialog">CONTINUE</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const initial={fans:0,cash:15,skill:1,room:0,stage:0,book:0,scene:0,seenIntro:false,storyComplete:false};
+  let data=load(),dialogQueue=[],markerPos=0,markerDir=1,markerTimer,rhythmActive=false;
+  const $=id=>document.getElementById(id);
+
+  function load(){
+    try{return {...initial,...JSON.parse(localStorage.getItem("fiveRiseSave")||"{}")};}
+    catch{return {...initial};}
+  }
+  function save(){
+    try{localStorage.setItem("fiveRiseSave",JSON.stringify(data));}catch{}
+  }
+  function showScreen(id){
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    $(id).classList.add("active");
+  }
+  function updateStats(){
+    $("fans").textContent=data.fans;
+    $("cash").textContent=data.cash;
+    $("skill").textContent=data.skill+data.room+data.book;
+    $("roomLevel").textContent=data.room;
+    $("stageLevel").textContent=data.stage;
+    $("bookLevel").textContent=data.book;
+    $("continueBtn").disabled=!data.seenIntro;
+    $("continueBtn").style.opacity=data.seenIntro?"1":".55";
+    save();
+  }
+  function say(speaker,text,next){
+    dialogQueue.push({speaker,text,next});
+    if(dialogQueue.length===1)showDialog();
+  }
+  function showDialog(){
+    const item=dialogQueue[0];
+    if(!item){$("cutscene").classList.remove("show");return;}
+    $("speaker").textContent=item.speaker;
+    $("dialogText").textContent=item.text;
+    $("cutscene").classList.add("show");
+  }
+  $("nextDialog").onclick=()=>{
+    const item=dialogQueue.shift();
+    if(item&&item.next)item.next();
+    if(dialogQueue.length)showDialog();
+    else $("cutscene").classList.remove("show");
+  };
+
+  const scenes=[
+    {chapter:"CHAPTER 1 · FIRST VERSE",title:"The Backroom Open Mic",text:"The room is small, the speakers crackle, and the sign-up sheet has one blank line left. Host Jules hands you the mic.",choices:[
+      {label:"Admit you’re nervous, but step up anyway.",effect:()=>{data.skill++;startRhythm();}},
+      {label:"Ask the sound tech for a quick level check.",effect:()=>{data.cash+=5;startRhythm();}}
+    ]},
+    {chapter:"CHAPTER 2 · A NAME IN THE ROOM",title:"Nia’s Notebook",text:"After your set, producer Nia catches you by the door. “What do you want your music to say?”",choices:[
+      {label:"I want people to feel understood.",effect:()=>{data.fans+=10;nextScene();}},
+      {label:"I want to make clever songs people remember.",effect:()=>{data.skill++;data.cash+=5;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 3 · BUILD YOUR SOUND",title:"The First Recording",text:"Nia offers you a late-night studio slot. You have one evening to decide what kind of track to make.",choices:[
+      {label:"Spend $10 on studio time and polish the vocals.",effect:()=>{if(data.cash>=10)data.cash-=10;data.skill++;nextScene();}},
+      {label:"Invite the open-mic crowd to share ideas.",effect:()=>{data.fans+=15;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 4 · OUTSIDE THE STUDIO",title:"A Friendly Cypher",text:"Performers are trading playful verses in the park. They invite you in—this is about wordplay and fun.",choices:[
+      {label:"Jump in with a funny, self-aware verse.",effect:()=>startRhythm()},
+      {label:"Listen first and learn the group’s rhythm.",effect:()=>{data.skill++;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 5 · MAKE IT YOURS",title:"The Cover Art",text:"Your first track is ready, but it needs a look. Your friend offers to design the cover with you.",choices:[
+      {label:"Create a bright, hand-drawn cover together.",effect:()=>{data.fans+=8;nextScene();}},
+      {label:"Save your cash and focus on your next song.",effect:()=>{data.cash+=8;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 6 · FIRST SHOWCASE",title:"The Arts Room",text:"The neighborhood arts room is packed. Jules spots you in the wings and nods toward the stage.",choices:[
+      {label:"Take the stage and trust your practice.",effect:()=>startRhythm()},
+      {label:"Bring a friend onstage for a two-person set.",effect:()=>{data.fans+=8;startRhythm();}}
+    ]},
+    {chapter:"CHAPTER 7 · AFTER THE CHEERS",title:"A Message from Home",text:"Someone who has supported you from the start sends a message: “I’m proud of you. Remember to enjoy making music.”",choices:[
+      {label:"Call them and say thank you.",effect:()=>{data.fans+=5;data.skill++;nextScene();}},
+      {label:"Write them a verse for your next song.",effect:()=>{data.skill++;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 8 · A NEW SOUND",title:"The Producer’s Challenge",text:"Nia plays a beat unlike anything you’ve tried: softer, slower, and full of space. She asks you to experiment.",choices:[
+      {label:"Try a thoughtful, melodic delivery.",effect:()=>startRhythm()},
+      {label:"Add a live percussion part.",effect:()=>{if(data.cash>=5)data.cash-=5;data.skill++;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 9 · THE COMMUNITY SET",title:"Show Up for the Block",text:"A community arts fundraiser needs performers. The stage is simple, but the crowd is ready to celebrate local talent.",choices:[
+      {label:"Offer to perform a short set.",effect:()=>startRhythm()},
+      {label:"Help organize the lineup before your set.",effect:()=>{data.fans+=10;data.cash+=5;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 10 · A CREATIVE DETOUR",title:"Writer’s Block",text:"The next song isn’t coming together. Your notebook is full of crossed-out lines, and the deadline is getting close.",choices:[
+      {label:"Take a walk and write down what you notice.",effect:()=>{data.skill++;nextScene();}},
+      {label:"Invite a collaborator to trade ideas.",effect:()=>{data.fans+=8;nextScene();}},
+      {label:"Use your notebook upgrade for inspiration.",effect:()=>{data.skill+=1+data.book;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 11 · RADIO NIGHT",title:"Live on Air",text:"A local radio host invites you to perform live. The station is small, but listeners around the city are tuned in.",choices:[
+      {label:"Perform your newest song live.",effect:()=>startRhythm()},
+      {label:"Tell listeners the story behind the song.",effect:()=>{data.fans+=12;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 12 · CHOOSE YOUR PATH",title:"Two Invitations",text:"You’re invited to open for a touring artist or headline a local creative festival. Both could be great.",choices:[
+      {label:"Take the opening slot and learn from the tour.",effect:()=>{data.fans+=15;nextScene();}},
+      {label:"Headline the festival with your community.",effect:()=>{data.fans+=10;data.cash+=10;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 13 · THE BIG REHEARSAL",title:"Everything Clicks",text:"The band, the beat, and your lyrics finally come together. Jules says it’s time to rehearse the full set.",choices:[
+      {label:"Run the set and focus on clean timing.",effect:()=>startRhythm()},
+      {label:"Rehearse transitions and stage presence.",effect:()=>{data.skill++;data.fans+=5;nextScene();}}
+    ]},
+    {chapter:"CHAPTER 14 · SHOW DAY",title:"The City Stage",text:"The biggest crowd you’ve ever seen fills the outdoor stage. You spot familiar faces and take a steadying breath.",choices:[
+      {label:"Step into the spotlight and give it your all.",effect:()=>startRhythm()},
+      {label:"Lead a call-and-response warm-up.",effect:()=>{data.fans+=15;startRhythm();}}
+    ]},
+    {chapter:"CHAPTER 15 · YOUR NEXT CHAPTER",title:"The Encore",text:"Your final song ends. The crowd cheers—not because you became someone else, but because you became more fully yourself. Nia asks what you’ll do next.",choices:[
+      {label:"Keep making music with the people who helped you grow.",effect:()=>finishStory(25,20)},
+      {label:"Mentor new performers at the open mic.",effect:()=>finishStory(30,0)}
+    ]}
+  ];
+
+  function renderScene(){
+    if(data.storyComplete){renderEnding();return;}
+    const scene=scenes[Math.min(data.scene,scenes.length-1)];
+    $("chapter").textContent=scene.chapter;
+    $("sceneTitle").textContent=scene.title;
+    $("sceneText").textContent=scene.text;
+    $("choices").innerHTML="";
+    $("rhythm").hidden=true;
+    scene.choices.forEach(choice=>{
+      const b=document.createElement("button");
+      b.className="choice";
+      b.textContent=choice.label;
+      b.onclick=()=>{ $("choices").innerHTML="";choice.effect();updateStats(); };
+      $("choices").appendChild(b);
+    });
+    updateStats();
+  }
+  function nextScene(){
+    data.scene++;
+    if(data.scene>=scenes.length)data.scene=scenes.length-1;
+    renderScene();
+  }
+  function finishStory(fans,cash){
+    data.fans+=fans;data.cash+=cash;data.storyComplete=true;
+    updateStats();renderEnding();
+    say("JULES","That’s your first big story—not the end. You’ve built a sound, a community, and a reason to keep creating.");
+  }
+  function renderEnding(){
+    $("chapter").textContent="STORY COMPLETE";
+    $("sceneTitle").textContent="The Next Chapter Is Yours";
+    $("sceneText").textContent="You finished your first 15 chapters. Your progress is saved. Keep building your stats, or start a new story whenever you’re ready.";
+    $("choices").innerHTML="";
+    $("rhythm").hidden=true;
+  }
+
+  function startRhythm(){
+    $("rhythm").hidden=false;
+    $("choices").innerHTML="";
+    $("rhythmMessage").textContent="Press HIT THE BEAT when the marker is near the middle!";
+    markerPos=0;markerDir=1;rhythmActive=true;
+    clearInterval(markerTimer);
+    markerTimer=setInterval(()=>{
+      if(!rhythmActive)return;
+      markerPos+=markerDir*(1.8+data.room*.12);
+      if(markerPos>100||markerPos<0)markerDir*=-1;
+      $("marker").style.left=Math.max(0,Math.min(100,markerPos))+"%";
+    },20);
+  }
+  function hitBeat(){
+    if(!rhythmActive)return;
+    rhythmActive=false;clearInterval(markerTimer);
+    const distance=Math.abs(markerPos-50);
+    const tolerance=10+data.room*2+data.skill;
+    let line;
+    if(distance<tolerance){
+      const earned=12+data.stage*5;
+      data.fans+=earned;data.cash+=8;
+      $("rhythmMessage").textContent=`Perfect timing! +${earned} fans and $8.`;
+      line="That was the moment. You found the pocket—and the crowd felt it.";
+    }else if(distance<tolerance*2){
+      data.fans+=5;data.cash+=3;
+      $("rhythmMessage").textContent="Nice recovery! +5 fans and $3.";
+      line="Good energy. Tighten the timing and you’ll own that stage.";
+    }else{
+      $("rhythmMessage").textContent="You missed the pocket. You still showed up—keep practicing.";
+      line="Every performer has an off night. Take what you learned and go again.";
+    }
+    updateStats();
+    const next=()=>{if(data.scene<scenes.length-1){data.scene++;renderScene();}else{renderScene();}};
+    say("NIA",line,next);
+  }
+  $("hitBtn").onclick=hitBeat;
+  document.addEventListener("keydown",e=>{
+    if(e.code==="Space"&&$("game").classList.contains("active")&&!$("cutscene").classList.contains("show")){
+      e.preventDefault();hitBeat();
+    }
+  });
+
+  function upgrade(key,price,name){
+    if(data.cash<price){say("JULES",`You need $${price} for the ${name} upgrade. Play another round to earn more.`);return;}
+    data.cash-=price;data[key]++;
+    if(key==="room")data.skill++;
+    if(key==="book")data.skill++;
+    updateStats();renderScene();
+  }
+  $("roomBtn").onclick=()=>upgrade("room",20,"Practice Room");
+  $("stageBtn").onclick=()=>upgrade("stage",30,"Stage Presence");
+  $("bookBtn").onclick=()=>upgrade("book",25,"Notebook");
+  $("homeBtn").onclick=()=>{save();showScreen("home");};
+
+  $("startBtn").onclick=()=>{
+    if(data.seenIntro&&!confirm("Start a new story? This resets your saved progress."))return;
+    data={...initial,seenIntro:true};
+    save();showScreen("game");renderScene();
+    say("JULES","Welcome to the Backroom. The crowd is here for music—not perfection. Step up when you’re ready.");
+  };
+  $("continueBtn").onclick=()=>{
+    if(!data.seenIntro)return;
+    showScreen("game");renderScene();
+    if(!data.introSceneShown){
+      data.introSceneShown=true;save();
+      say("NIA","You’re back. The city’s still listening—what do you want to make next?");
+    }
+  };
+  $("resetBtn").onclick=()=>{
+    if(confirm("Start a new story? This will erase saved progress.")){
+      data={...initial,seenIntro:true};save();renderScene();
+      say("JULES","New night, fresh page. The mic is yours.");
+    }
+  };
+
+  updateStats();
+})();
+</script>
+</body>
+</html>
